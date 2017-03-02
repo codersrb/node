@@ -20,7 +20,7 @@ var PORT = 8088;
 var db = mysql.createConnection({
   host     : 'localhost',
   user     : 'root',
-  password : 'vinove',
+  password : 'root',
   database : 'temp'
 });
 
@@ -88,49 +88,64 @@ net.createServer(function(sock)
 	         var insertData  = {
 				 start_msg: dataArr[0],
 				 imei_no: dataArr[1],
-				 pm1: dataArr[2],
-				 pm2: dataArr[3],
-	             pm3: dataArr[4],
-	             pm4: dataArr[5],
-	             pm5: dataArr[6],
-	             pm6: dataArr[7],
-	             pm7: dataArr[8],
-	             pm8: dataArr[9],
-	             pm9: dataArr[10],
-	             pm10: dataArr[11],
-	             pm11: dataArr[12],
-	             pm12: dataArr[13],
-	             pm13: dataArr[14],
-	             pm14: dataArr[15],
-	             pm15: dataArr[16],
-	             pm16: dataArr[17],
-	             pm17: dataArr[18],
-	             pm18: dataArr[19],
-	             pm19: dataArr[20],
-	             pm20: dataArr[21],
-	             pm21: dataArr[22],
-	             pm22: dataArr[23],
-	             pm23: dataArr[24],
-	             pm24: dataArr[25],
-	             pm25: dataArr[26],
-	             pm26: dataArr[27],
-	             pm27: dataArr[28],
-	             pm28: dataArr[29],
-	             pm29: dataArr[30],
-	             pm30: dataArr[31],
-	             pm31: dataArr[32],
-	             pm32: dataArr[33],
-	             pm33: dataArr[34],
-	             pm34: dataArr[35],
-	             pm35: secondLastIndex,
+				 power_status: dataArr[2],
+				 pone_voltage: dataArr[3],
+	             ptwo_voltage: dataArr[4],
+	             pthree_voltage: dataArr[5],
+	             pone_amp: dataArr[6],
+	             ptwo_amp: dataArr[7],
+	             pthree_amp: dataArr[8],
+	             frequency: dataArr[9],
+	             dg_rpm: dataArr[10],
+	             dg_run_hour: dataArr[11],
+	             dg_minutes: dataArr[12],
+	             kw: dataArr[13],
+	             kva: dataArr[14],
+	             pf: dataArr[15],
+	             kwh: dataArr[16],
+	             kwh_point: dataArr[17],
+	             kvah: dataArr[18],
+	             kvh_point: dataArr[19],
+	             hct_status: dataArr[20],
+	             llop_status: dataArr[21],
+	             fuel_status: dataArr[22],
+	             alternator: dataArr[23],
+	             dg_fail_to_start: dataArr[24],
+	             dg_fail_to_stop: dataArr[25],
+	             dg_fault7: dataArr[26],
+	             dg_fault8: dataArr[27],
+	             ex_field1: dataArr[28],
+	             ex_field2: dataArr[29],
+	             ex_field3: dataArr[30],
+	             ex_field4: dataArr[31],
+	             ex_field5: dataArr[32],
+	             ex_field6: dataArr[33],
+	             batt_volt: dataArr[34],
+	             up_ctr: dataArr[35],
+	             dyn_ip: secondLastIndex,
 				 stop_msg: lastIndex,
 
 			 };
 
 
 	         /** Insert the data to mysql , using async */
-	         var query = db.query('INSERT INTO testfirsttbl_new SET ?', insertData, function (error, results, fields) {
-	                 if (error) throw error;
+	         var query = db.query('INSERT INTO testfirsttbl2_new SET ?', insertData, function (error, results, fields) {
+	                 if(error)
+                     {
+                         console.log(error);
+                     }
+
+                     if(results && results.affectedRows > 0)
+                     {
+                         /** Send data back to client (Acknowlegdement) */
+                         /**
+                          * @todo Send data back to meter
+                          * @author Saurabh Sharma
+                          * @lastModified Mon Feb 20 2017, 10:10:47 PM
+                          */
+                         sock.write(data);
+
+                     }
 	         });
 
 		 }
@@ -138,8 +153,7 @@ net.createServer(function(sock)
 
 
 
-        /** Send data back to client (Acknowlegdement) */
-        sock.write('You said "' + data + '"');
+
 
     });
 
